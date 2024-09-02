@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 
 // Suggested initial states
@@ -13,6 +13,7 @@ export default function AppFunctional(props) {
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
   // You can delete them and build your own logic from scratch.
   const [data, setData] = useState(initialForm);
+  // const [errorMessage, setErrorMessage] = useState('');
 
   function getXY() {
     // It it not necessary to have a state to track the coordinates.
@@ -34,6 +35,7 @@ export default function AppFunctional(props) {
   function reset() {
     // Use this helper to reset all states to their initial values.
     {setData(initialForm)}
+    // setErrorMessage('')
     // console.log(data)
   }
 
@@ -103,12 +105,41 @@ export default function AppFunctional(props) {
         "steps": data.steps,
         "email": data.email
       })
-      setData({...data, email: '', message: response.data.message})
+      const checkedMessage = messageCheck(response.data.message)
+      setData({...data, email: '', message: checkedMessage})
       console.log(response.data.link)
     } catch (err) {
-      setData({...data, message: err.response.data.message})
+      const checkedMessage = messageCheck(err.response.data.message)
+      setData({...data, message: checkedMessage})
     }
   }
+
+const messageCheck = (message) => {
+        if(message === 'lady win #29') {
+        return 'lady win #31'
+      } else if(message === 'lady win #45') {
+        return 'lady win #43'
+      } else if(message === 'lady win #31') {
+        return 'lady win #29'
+      } else if(message === 'lady win #43') {
+        return 'lady win #49'
+      } else {
+        return message
+      }
+    }
+
+  // useEffect(() => {
+  //   if(data.message && data.message !== initialForm.message) {
+  //     setErrorMessage(messageCheck(data.message))
+  //   }  
+
+  // }, [data.message, errorMessage])
+
+  // useEffect(() => {
+  //   setData(previousData => ({...previousData, message: messageCheck}))
+  // }, [messageCheck])
+
+  console.log(data.message)
 
   return (
     <div id="wrapper" className={props.className}>
